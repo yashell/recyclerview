@@ -2,6 +2,7 @@ package com.example.recyclerview;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterViewAnimator;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         initData();
         //设置recyclerview适配器
-        adapter = new MyRecyclerViewAdapter(MainActivity.this,datas);
+        adapter = new MyRecyclerViewAdapter(MainActivity.this, datas);
         recyclerview.setAdapter(adapter);
 
         // layourManage   VERTICAL垂直  HORIZONTAL水平
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          * 第二个参数 VERTICAL垂直  HORIZONTAL水平
          * 第三个参数 默认都是从0条显示，false的话从头 true 从尾
          */
-        recyclerview.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.VERTICAL,false));
+        recyclerview.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
 
         /**
          * layourManage
@@ -67,17 +69,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerview.scrollToPosition(30); //默认滚动到哪一条
 
 
-        //添加分割线
-//        DividerItemDecoration divider = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
-//        divider.setDrawable(ContextCompat.getDrawable(this,R.drawable.divider));
-//        recyclerview.addItemDecoration(divider);
+//        添加分割线
+        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
+        recyclerview.addItemDecoration(divider);
 
-        recyclerview.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+//        recyclerview.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+
+        //设置动画
+//        recyclerview.setItemAnimator(new DefaultItemAnimator()); // 默认动画
+
 
         adapter.setOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, String data) {
-                Toast.makeText(MainActivity.this,"data"+data,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "data" + data, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -86,12 +92,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-        btn_add =(Button) findViewById(R.id.btn_add);
-        btn_del =(Button) findViewById(R.id.btn_del);
-        btn_list = (Button)findViewById(R.id.btn_list);
-        btn_gird = (Button)findViewById(R.id.btn_gird);
+        btn_add = (Button) findViewById(R.id.btn_add);
+        btn_del = (Button) findViewById(R.id.btn_del);
+        btn_list = (Button) findViewById(R.id.btn_list);
+        btn_gird = (Button) findViewById(R.id.btn_gird);
         btn_flow = (Button) findViewById(R.id.btn_flow);
-        recyclerview =(RecyclerView) findViewById(R.id.recyclerview);
+        recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
 
         //设置点击事件
         btn_add.setOnClickListener(this);
@@ -104,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initData() {
         //准备数据集合
         datas = new ArrayList<>();
-        for (int i=0;i<100;i++){
-            datas.add("第"+i+"条数据");
+        for (int i = 0; i < 100; i++) {
+            datas.add("第" + i + "条数据");
         }
     }
 
@@ -113,17 +119,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add:
+                adapter.addData(0, "新增了一条数据");
+                recyclerview.scrollToPosition(0);
                 break;
             case R.id.btn_del:
+                adapter.removeData(0);
                 break;
             case R.id.btn_list:
-                recyclerview.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.VERTICAL,false));
+                recyclerview.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
                 break;
             case R.id.btn_gird:
-                recyclerview.setLayoutManager(new GridLayoutManager(MainActivity.this,3,GridLayoutManager.VERTICAL,false));
+                recyclerview.setLayoutManager(new GridLayoutManager(MainActivity.this, 3, GridLayoutManager.VERTICAL, false));
                 break;
             case R.id.btn_flow:
-                recyclerview.setLayoutManager(new StaggeredGridLayoutManager(3,GridLayoutManager.VERTICAL));
+                recyclerview.setLayoutManager(new StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL));
                 break;
         }
 

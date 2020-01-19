@@ -59,7 +59,27 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return datas.size();
     }
 
-    class MyViewHodler extends RecyclerView.ViewHolder {
+    /**
+     * 添加数据
+     * @param position
+     * @param data
+     */
+    public void addData(int position, String data) {
+        datas.add(position,data);
+        //刷新适配器
+        notifyItemInserted(position);
+    }
+
+    /**
+     * 删除数据
+     * @param position
+     */
+    public void removeData(int position) {
+        datas.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    class MyViewHodler extends RecyclerView.ViewHolder{
         private ImageView tv_icon;
         private TextView tv_title;
 
