@@ -55,14 +55,32 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@style/AppThemeListDivider"
-            android:background="#ff4f02">
+            android:layout_height="match_parent">
+<!--            // 经典头部-->
+<!--            <com.scwang.smartrefresh.layout.header.ClassicsHeader-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"/>-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:theme="@style/AppThemeListDivider"
+                android:overScrollMode="never"
+                android:background="#ff0000">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
+
+<!--            // 经典底部-->
+<!--            <com.scwang.smartrefresh.layout.footer.ClassicsFooter-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:srlClassicsSpinnerStyle="Translate"/>-->
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
     </LinearLayout>
 
 

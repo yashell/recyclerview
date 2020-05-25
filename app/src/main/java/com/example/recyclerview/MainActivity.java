@@ -7,11 +7,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 
@@ -26,14 +32,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<String> datas;
     private MyRecyclerViewAdapter adapter;
 
+    private int total = 21;
+    private int nowNum = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        initData();
+        initData(0);
         //设置recyclerview适配器
         adapter = new MyRecyclerViewAdapter(MainActivity.this,datas);
+
+
+
+
+
+
         recyclerview.setAdapter(adapter);
 
         // layourManage   VERTICAL垂直  HORIZONTAL水平
@@ -63,21 +78,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          * 第二个参数 VERTICAL垂直  HORIZONTAL水平
          */
 //        recyclerview.setLayoutManager(new StaggeredGridLayoutManager(3,GridLayoutManager.VERTICAL));
-
         recyclerview.scrollToPosition(30); //默认滚动到哪一条
-
-
         //添加分割线
 //        DividerItemDecoration divider = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
 //        divider.setDrawable(ContextCompat.getDrawable(this,R.drawable.divider));
 //        recyclerview.addItemDecoration(divider);
 
+        // 这个写法也可以添加分割线，但颜色是通过  android:background="#ff0000" 来设置
         recyclerview.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
 
         adapter.setOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, String data) {
                 Toast.makeText(MainActivity.this,"data"+data,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        RefreshLayout refreshLayout = (RefreshLayout)findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                datas.clear();
+                insertData(0);
+                refreshlayout.finishRefresh(1000,true,false);//传入false表示刷新失败
+
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshlayout) {
+                insertData(datas.size());
+                boolean noMore = total> datas.size()?false:true;
+
+//                refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
+                refreshlayout.finishLoadMore(1000,true,noMore);//传入false表示加载失败
 
             }
         });
@@ -101,12 +137,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_flow.setOnClickListener(this);
     }
 
-    private void initData() {
+    private void initData(int num) {
         //准备数据集合
         datas = new ArrayList<>();
-        for (int i=0;i<100;i++){
+        for (int i=num;i<num+10;i++){
             datas.add("第"+i+"条数据");
         }
+    }
+
+    public void insertData(int num) {
+        int nu = (num+10) > total ?  total :  num+10;
+
+        for (int i=num;i<nu;i++){
+            datas.add("第"+i+"条数据");
+        }
+        adapter.notifyItemChanged(datas.size() - nu, datas.size());//局部刷新
     }
 
     @Override

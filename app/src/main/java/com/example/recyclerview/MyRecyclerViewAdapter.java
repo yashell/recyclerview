@@ -31,7 +31,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @NonNull
     @Override
     public MyViewHodler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = View.inflate(context, R.layout.item_recyclerview, null);
+        View itemView = View.inflate(context, R.layout.recyclerview_item, null);
         return new MyViewHodler(itemView);
     }
 
