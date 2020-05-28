@@ -20,6 +20,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,7 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn_gird;
     private Button btn_flow;
     private RecyclerView recyclerview;
-    private ArrayList<String> datas;
+//    private ArrayList<String> datas;
+    private List<DataEntity> dataList = new ArrayList<>();
     private MyRecyclerViewAdapter adapter;
 
     private int total = 21;
@@ -42,7 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         initData(0);
         //设置recyclerview适配器
-        adapter = new MyRecyclerViewAdapter(MainActivity.this,datas);
+//        adapter = new MyRecyclerViewAdapter(MainActivity.this,dataList);
+        adapter = new MyRecyclerViewAdapter(MainActivity.this,dataList);
 
 
 
@@ -89,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         adapter.setOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, String data) {
+            public void onItemClick(View view, DataEntity data) {
                 Toast.makeText(MainActivity.this,"data"+data,Toast.LENGTH_SHORT).show();
 
             }
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                datas.clear();
+                dataList.clear();
                 insertData(0);
                 refreshlayout.finishRefresh(1000,true,false);//传入false表示刷新失败
 
@@ -109,8 +112,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshlayout) {
-                insertData(datas.size());
-                boolean noMore = total> datas.size()?false:true;
+                insertData(dataList.size());
+                boolean noMore = total> dataList.size()?false:true;
 
 //                refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
                 refreshlayout.finishLoadMore(1000,true,noMore);//传入false表示加载失败
@@ -139,19 +142,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initData(int num) {
         //准备数据集合
-        datas = new ArrayList<>();
+//        datas = new ArrayList<>();
+//        for (int i=num;i<num+10;i++){
+//            datas.add("第"+i+"条数据");
+//        }
+
         for (int i=num;i<num+10;i++){
-            datas.add("第"+i+"条数据");
+            DataEntity apple = new DataEntity("电动车行业门店采集"+i, R.drawable.ic_launcher_background,0,"2020-05-21 19:51:02");
+            dataList.add(apple);
         }
+
     }
 
     public void insertData(int num) {
-        int nu = (num+10) > total ?  total :  num+10;
-
-        for (int i=num;i<nu;i++){
-            datas.add("第"+i+"条数据");
-        }
-        adapter.notifyItemChanged(datas.size() - nu, datas.size());//局部刷新
+//        int nu = (num+10) > total ?  total :  num+10;
+//
+//        for (int i=num;i<nu;i++){
+//            datas.add("第"+i+"条数据");
+//        }
+//        adapter.notifyItemChanged(datas.size() - nu, datas.size());//局部刷新
     }
 
     @Override

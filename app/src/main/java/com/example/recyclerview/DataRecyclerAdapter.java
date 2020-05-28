@@ -1,5 +1,6 @@
 package com.example.recyclerview;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recyclerview.Utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -62,6 +64,7 @@ public class DataRecyclerAdapter extends RecyclerView.Adapter<DataRecyclerAdapte
         holder.ShowTime.setText(item.getTime());
 
     }
+
 
     @Override
     public int getItemCount() {

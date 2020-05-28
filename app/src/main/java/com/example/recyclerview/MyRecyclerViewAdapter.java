@@ -8,17 +8,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.recyclerview.Utils.Utils;
+
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHodler> {
     private Context context;
     private ArrayList<String> datas;
+    private List<DataEntity> dataList;
 
-    public MyRecyclerViewAdapter(Context context, ArrayList<String> datas) {
+    public MyRecyclerViewAdapter(Context context,List<DataEntity> mdataList) {
         this.context = context;
-        this.datas = datas;
+        this.dataList = mdataList;
     }
 
     /**
@@ -44,9 +48,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public void onBindViewHolder(@NonNull MyViewHodler holder, int position) {
         // 根据位置得到相应的数据
-        String data = datas.get(position);
-        holder.tv_title.setText(data);
 
+        DataEntity data = dataList.get(position);
+        holder.rec_title.setText(data.getTitle());
+        holder.rec_time.setText(data.getTime());
+        holder.rec_icon.setImageResource(data.getImageId());
     }
 
     /**
@@ -56,7 +62,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
      */
     @Override
     public int getItemCount() {
-        return datas.size();
+        return dataList.size();
     }
 
     /**
@@ -80,30 +86,36 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
     class MyViewHodler extends RecyclerView.ViewHolder{
-        private ImageView tv_icon;
-        private TextView tv_title;
+        private ImageView rec_icon;
+        private TextView rec_title;
+        private TextView rec_time;
+
 
         public MyViewHodler(@NonNull View itemView) {
             super(itemView);
-            tv_icon = (ImageView) itemView.findViewById(R.id.tv_icon);
-            tv_title = (TextView) itemView.findViewById(R.id.tv_title);
+            rec_icon = (ImageView) itemView.findViewById(R.id.rec_icon);
+            rec_title = (TextView) itemView.findViewById(R.id.rec_title);
+            rec_time = (TextView) itemView.findViewById(R.id.rec_time);
 
             // itemView 是整行
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(v, datas.get(getLayoutPosition()));
+                        onItemClickListener.onItemClick(v, dataList.get(getLayoutPosition()));
                     }
                 }
             });
 
-            tv_icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context,"我是图片"+datas.get(getLayoutPosition()),Toast.LENGTH_SHORT).show();
-                }
-            });
+
+
+
+//            tv_icon.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(v.getContext(),"我是图片"+datas.get(getLayoutPosition()),Toast.LENGTH_SHORT).show();
+//                }
+//            });
 
         }
     }
@@ -119,7 +131,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
          * @param view 点击item视图
          * @param data 点击得到的数据
          */
-        public void onItemClick(View view, String data);
+        public void onItemClick(View view, DataEntity data);
     }
 
     private OnItemClickListener onItemClickListener;
